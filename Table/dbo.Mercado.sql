@@ -1,0 +1,26 @@
+USE [MercadoBox]
+GO
+
+/****** Object:  Table [dbo].[Mercado]    Script Date: 07/10/2025 07:15:37 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Mercado](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nome] [nvarchar](150) NOT NULL,
+	[Endereco] [nvarchar](255) NULL,
+	[Cidade] [nvarchar](100) NULL,
+	[Estado] [nvarchar](50) NULL,
+	[Cnpj] [nvarchar](20) NULL,
+	[Telefone] [nvarchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
