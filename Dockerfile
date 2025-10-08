@@ -24,4 +24,4 @@ COPY ./init.sql /usr/src/app/init.sql
 EXPOSE 1433
 
 # Inicia o SQL, espera, executa o init.sql usando a variável de ambiente $SA_PASSWORD (fornecida em runtime)
-CMD /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 20 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"$SA_PASSWORD\" -i /usr/src/app/init.sql && tail -f /dev/null"
+CMD /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 180 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"$SA_PASSWORD\" -i /usr/src/app/init.sql && tail -f /dev/null"
