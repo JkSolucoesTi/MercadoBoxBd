@@ -1,9 +1,9 @@
--- ===============================
+ï»¿-- ===============================
 -- Banco de Dados: MercadoBox_teste
 -- ===============================
-IF DB_ID('MercadoBox_teste') IS NULL
+IF DB_ID('MercadoBox') IS NULL
 BEGIN
-    CREATE DATABASE MercadoBox_teste;
+    CREATE DATABASE MercadoBox;
 END
 GO
 
@@ -87,7 +87,7 @@ END
 GO
 
 -- ===============================
--- Relações (Foreign Keys)
+-- Relaï¿½ï¿½es (Foreign Keys)
 -- ===============================
 IF NOT EXISTS (
     SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_ItemCarrinho_Compra'
