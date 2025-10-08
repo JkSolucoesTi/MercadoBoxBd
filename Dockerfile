@@ -1,27 +1,26 @@
-# Imagem oficial do SQL Server
-FROM mcr.microsoft.com/mssql/server:2022-latest
+# Dockerfile — baseado em Azure SQL Edge (imagem leve)
+FROM mcr.microsoft.com/azure-sql-edge:latest
 
-# Aceitar termos de licença e senha do SA
+# Aceita termos (a senha será injetada em runtime, não no Dockerfile)
 ENV ACCEPT_EULA=Y
 
-# Atualiza pacotes e instala o sqlcmd
 USER root
-RUN apt-get update && \
-    apt-get install -y curl apt-transport-https gnupg2 && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-    apt-get update && \
-    ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools unixodbc-dev && \
-    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Define diretório de trabalho
+# Instala ferramentas básicas e baixa o sqlcmd (go-sqlcmd) diretamente do GitHub
+ARG SQLCMD_VER=v1.7.0
+RUN apt-get update && apt-get install -y curl bzip2 ca-certificates \
+    && curl -L -o /tmp/sqlcmd.tar.bz2 "https://github.com/microsoft/go-sqlcmd/releases/download/${SQLCMD_VER}/sqlcmd-linux-amd64.tar.bz2" \
+    && tar -xjf /tmp/sqlcmd.tar.bz2 -C /usr/local/bin \
+    && chmod +x /usr/local/bin/sqlcmd \
+    && rm -rf /var/lib/apt/lists/* /tmp/sqlcmd.tar.bz2
+
 WORKDIR /usr/src/app
 
-# Copia o script de inicialização
+# Copia init.sql e o entrypoint
 COPY ./init.sql /usr/src/app/init.sql
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
 
 EXPOSE 1433
 
-# Inicia o SQL, espera, executa o init.sql usando a variável de ambiente $SA_PASSWORD (fornecida em runtime)
-CMD /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 180 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"$SA_PASSWORD\" -i /usr/src/app/init.sql && tail -f /dev/null"
+CMD ["/usr/src/app/entrypoint.sh"]
