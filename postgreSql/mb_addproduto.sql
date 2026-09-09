@@ -12,8 +12,11 @@ DECLARE
     new_id INTEGER;
 BEGIN
     INSERT INTO produtos (codigo, nome, categoria_id, descricao)
-
     VALUES (p_codigo, p_nome, p_categoriaId, p_descricao)
+    ON CONFLICT (codigo) DO UPDATE 
+        SET nome = EXCLUDED.nome,
+            categoria_id = EXCLUDED.categoria_id,
+            descricao = EXCLUDED.descricao
     RETURNING id INTO new_id;
 
     RETURN new_id;

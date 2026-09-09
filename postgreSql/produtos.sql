@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.produtos
     categoria_id integer NOT NULL,
     descricao character varying(500) COLLATE pg_catalog."default",
     CONSTRAINT produtos_pkey PRIMARY KEY (id),
+    CONSTRAINT uk_produtos_codigo UNIQUE (codigo),
     CONSTRAINT fk_produtos_categorias FOREIGN KEY (categoria_id)
         REFERENCES public.categorias (id) MATCH SIMPLE
         ON UPDATE NO ACTION
